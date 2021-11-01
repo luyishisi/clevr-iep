@@ -27,6 +27,7 @@ IndexError: Dimension out of range (expected to be in range of [-1, 0], but got 
 ```
 
 这里的根本原因是此代码是使用非常旧版本的 PyTorch 编写的，并且从那时起对 PyTorch 进行了大量重大更改，这意味着代码中很多tensor的size和type在最近的 PyTorch 版本中不存在。
+![pic1](./img/cuda-torch-torchvision.png)
 ----------------以下为原文---向原作者致敬-----------------
 
 # inferring-and-executing
