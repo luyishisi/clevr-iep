@@ -1,9 +1,33 @@
 # for torcg=1.7版本
 ## 当我2021-11-01想run起：https://github.com/facebookresearch/clevr-iep/
-但是由于torch版本变迁，然而我使用的3090必须得cuda11以上版本，
+但是由于torch版本变迁，然而我使用的3090必须得cuda11以上版本
+
 so，我更新了一些代码，现在他可以运行在torch1.7上了
+![pic1](./img/run.png)
 
+查看cuda版本
+```bash
+cat /usr/local/cuda/version.txt
+cat /usr/local/cuda-11/version.json
+   "cuda" : {
+      "name" : "CUDA SDK",
+      "version" : "11.4.1"
+pytorch，torchvision 版本：进入python
+>>> import torch
+>>> torch.__version__
+'1.7.0+cu110'
+>>> import torchvision
+>>> print(torchvision.__version__)
+0.8.0
 
+如果使用高版本的torch直接运行，则会出现以下报错
+models/seq2seq.py", line 57, in get_dims
+    T_out = y.size(1) if y is not None else None
+IndexError: Dimension out of range (expected to be in range of [-1, 0], but got 1)
+```
+
+这里的根本原因是此代码是使用非常旧版本的 PyTorch 编写的，并且从那时起对 PyTorch 进行了大量重大更改，这意味着代码中很多tensor的size和type在最近的 PyTorch 版本中不存在。
+----------------以下为原文---向原作者致敬-----------------
 
 # inferring-and-executing
 
