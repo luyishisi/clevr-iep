@@ -164,7 +164,8 @@ def run_single_example(args, model):
 
   # Print results
   _, predicted_answer_idx = scores.data.cpu()[0].max(dim=0)
-  predicted_answer = vocab['answer_idx_to_token'][predicted_answer_idx[0]]
+  #predicted_answer = vocab['answer_idx_to_token'][predicted_answer_idx[0]]
+  predicted_answer = vocab['answer_idx_to_token'][predicted_answer_idx.item()]
 
   print('Question: "%s"' % args.question)
   print('Predicted answer: ', predicted_answer)
@@ -175,6 +176,7 @@ def run_single_example(args, model):
     program = predicted_program.data.cpu()[0]
     num_inputs = 1
     for fn_idx in program:
+      fn_idx = fn_idx.item()
       fn_str = vocab['program_idx_to_token'][fn_idx]
       num_inputs += iep.programs.get_num_inputs(fn_str) - 1
       print(fn_str)

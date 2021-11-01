@@ -11,6 +11,7 @@ import torch.cuda
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
+import numpy as np
 
 from iep.embedding import expand_embedding_vocab
 
@@ -172,13 +173,16 @@ class Seq2Seq(nn.Module):
       probs = F.softmax(logprobs.view(N, -1)) # Now N x V
       if argmax:
         _, cur_output = probs.max(1)
+        cur_output = cur_output.unsqueeze(0)
       else:
         cur_output = probs.multinomial() # Now N x 1
       self.multinomial_outputs.append(cur_output)
       self.multinomial_probs.append(probs)
       cur_output_data = cur_output.data.cpu()
-      not_done = logical_not(done)
-      y[:, t][not_done] = cur_output_data[not_done]
+      #not_done = logical_not(done)
+      not_done= np.where(done.data.cpu().numpy() == 0)
+      #y[:, t][not_done] = cur_output_data[not_done]
+      y[not_done, t] = cur_output_data[not_done]
       done = logical_or(done, cur_output_data.cpu() == self.END)
       cur_input = cur_output
       if done.sum() == N:
@@ -187,7 +191,7 @@ class Seq2Seq(nn.Module):
 
   def reinforce_backward(self, reward, output_mask=None):
     """
-    If output_mask is not None, then it should be a FloatTensor of shape (N, T)
+    If output_mask is not None, then it sould be a FloatTensor of shape (N, T)
     giving a multiplier to the output.
     """
     assert self.multinomial_outputs is not None, 'Must call reinforce_sample first'

@@ -1,3 +1,10 @@
+# for torcg=1.7版本
+## 当我2021-11-01想run起：https://github.com/facebookresearch/clevr-iep/
+但是由于torch版本变迁，然而我使用的3090必须得cuda11以上版本，
+so，我更新了一些代码，现在他可以运行在torch1.7上了
+
+
+
 # inferring-and-executing
 
 This is the code for the paper
